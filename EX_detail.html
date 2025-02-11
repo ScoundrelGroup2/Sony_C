@@ -1,0 +1,505 @@
+﻿(-:NewTypeCom:CommonFuncs_JSDeco:-)
+(-:NewTypeCom:Sony_Global_CommonJSDeco:-)
+
+<div class="panel panel-info" id="EXModal">
+    <div class="panel-body">
+        <div class="tab-content">
+            <div class="form-row" style="padding: 15px;">
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        Category
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <select class="form-control" name="Category" style="width: 100%;display:inline;">
+                            <option value="Expatriate">Expatriate</option>
+                            <option value="Family">Family</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        Expense Type
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <select class="form-control" name="ExpenseType" style="width: 100%;display:inline;">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        Expense Item
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <select class="form-control" name="ExpenseItem" style="width: 100%;display:inline;">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 form-group" hidden>
+                    <label>
+                        <font style="color:red;">*</font>
+                        費用敘述
+                    </label>
+                    <div class="" setborder="true">
+                        <input name="OtherTransDesc" class="form-control" type="text"
+                               value="">
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        單據類型
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <select class="form-control" name="ReciType" style="width: 100%;display:inline;">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        GUI Date
+                    </label>
+                    <div class="" setborder="true">
+                        <input name="ReciDate" class="form-control" type="text" value="">
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        GUI No
+                    </label>
+                    <div class="" setborder="true"><input name="ReciNo" class="form-control" type="text" value=""></div>
+                </div>
+                <!-- no recipt -->
+                <div class="col-md-2 form-group">
+                    <label style="display: block; width: 100%;white-space: nowrap;">&nbsp;</label>
+                    <div>
+                        <label class="custom-control custom-checkbox checkbox-inline" style="margin-left: 0px;">
+                            <input type="checkbox" class="custom-control-input" name="noReci">
+                            <span class="custom-control-indicator"></span>
+                            <font class="Default">No Receipt Number</font>
+                        </label>
+
+                    </div>
+                </div>
+                <!-- <div class="col-md-3 form-group">
+                    <label>
+                       <font style="color:red;"></font>
+                    </label>
+                    <div class="custom-control custom-checkbox checkbox-inline"
+                       style="margin-left: 0px; padding-left: 16px;"><input action="itemBox" type="checkbox"
+                          class="custom-control-input"><span class="custom-control-indicator"></span>
+                       <font> No Receipt No</font>
+                    </div>
+                 </div> -->
+
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        Currency
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <select class="form-control" name="Currency" style="width: 100%;display:inline;">
+                            <option value="TWD">TWD</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        Amount
+                    </label>
+                    <div class="" setborder="true">
+                        <input name="Amount" class="form-control" type="text-align:right"
+                               value="">
+                    </div>
+                </div>
+                <!-- 地點 -->
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        From
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <div class="" setborder="true">
+                            <input name="FromDest" class="form-control" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        To
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <div class="" setborder="true">
+                            <input name="ToDest" class="form-control" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <!-- 日期 -->
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        From
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <div class="" setborder="true">
+                            <input name="FromDate" class="form-control" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        To
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <div class="" setborder="true">
+                            <input name="ToDate" class="form-control" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>
+                        <font style="color:red;">*</font>
+                        Payee
+                    </label>
+                    <div class="input-group" setborder="true" style="width: 100%;">
+                        <select class="form-control" name="Payee" style="width: 100%;display:inline;">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-9 form-group">
+                    <label>
+                        <font style="color:red;"></font>
+                        Remark
+                    </label>
+                    <div class="" setborder="true">
+                        <input name="Remark" class="form-control" type="text-align:right"
+                               value="">
+                    </div>
+                </div>
+                <!-- <div class="col-md-9 form-group"> -->
+                <div class="col-md-9 form-group" style="display: none;">
+                    <label>
+                        <font style="color:red;"></font>
+                        Rate
+                    </label>
+                    <div class="" setborder="true">
+                        <input name="ExchangeRate" class="form-control"
+                               type="text-align:right" value="1" readonly>
+                    </div>
+                </div>
+                <!-- <div class="col-md-9 form-group"> -->
+                <div class="col-md-9 form-group" style="display: none;">
+                    <label>
+                        <font style="color:red;"></font>
+                        (TWD)Amount
+                    </label>
+                    <div class="" setborder="true">
+                        <input name="TWDAmount" class="form-control" type="text-align:right"
+                               value readonly>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $().ready(function () {
+        var $ex = window.parent.$ex;        //主頁表單參數-
+        var html = {};                          //表單模板-
+
+        $("[name=ReciDate]").DatePicker();
+        $("[name=FromDate]").DatePicker();
+        $("[name=ToDate]").DatePicker();
+
+
+        if ($ex.edit) {
+            var data = JSON.parse($ex.data);
+            $ex.modalLoad(data, $(document));
+            $ex.modalEdit = true;
+        }
+
+        setAllOption();
+
+        // 因執行loadModal跟setAllOption造成下拉會有重複的選項，刪除重複的 option
+        var names = $("#EXModal").find("select").map(function () {
+            return $(this).attr("name");
+        }).get();
+        for (var i = 0; i < names.length; i++) {
+            var seen = {};
+            $(`[name="${names[i]}"] option`).each(function () {
+                var txt = $(this).val();
+                if (seen[txt]) {
+                    $(this).remove();
+                } else {
+                    seen[txt] = true;
+                }
+            });
+        }
+
+        //換算TWD
+        $("[name=Amount]").input(function () {
+            rate = $("[name=ExchangeRate]").val();
+            amount = $("[name=Amount]").val();
+            $("[name=TWDAmount]").val(Math.round(rate * amount));
+        })
+
+        $("[name=Currency]").change(function () {
+            rate = $("[name=ExchangeRate]").val();
+            amount = $("[name=Amount]").val();
+            $("[name=TWDAmount]").val(rate * amount);
+        })
+
+    })
+
+    function getCurrency() {
+        var currency = Common.GetTableData("Sony_S068", { KURST: "M" });
+        currency.forEach(item => {
+            let currencyOption = $(`<option value="${item.FCURR}">${item.FCURR}</option>`);
+            $('[name=Currency]').append(currencyOption);
+        })
+    }
+
+    function getRate() {
+        let selecedtCurr = $('[name=Currency]').val();
+        if (selecedtCurr != "TWD") {
+            rate = Common.GetTableData("Sony_S068", { KURST: "M", FCURR: selecedtCurr })[0].UKURS;
+        }
+        else {
+            rate = 1;
+        }
+        $('[name=ExchangeRate]').val(rate);
+    }
+
+    function getData() {
+        var data = {
+            TypeId: getTypeId(),
+            FromDest: $('[name=FromDest]').val(),
+            ExpenseItem: $('[name=ExpenseItem]').val(),
+            ToDest: $('[name=ToDest]').val(),
+            Payee: $('[name=Payee]').val(),
+            ExpenseType: $('[name=ExpenseType]').val(),
+            ReciDate: $('[name=ReciDate]').val(),
+            Currency: $('[name=Currency]').val(),
+            Amount: $('[name=Amount]').val(),
+            ExchangeRate: $('[name=ExchangeRate]').val(),
+            TWDAmount: $('[name=TWDAmount]').val(),
+            Remark: $('[name=Remark]').val(),
+            FromDate: $('[name=FromDate]').val(),
+            ToDate: $('[name=ToDate]').val(),
+            OtherTransDesc: $('[name=OtherTransDesc]').val()
+        };
+        return data;
+    }
+
+    function getTypeId() {
+        var TypeVal = $('[name=ExpenseType]').val();
+        var TypeId = $('[name=ExpenseType] option[value="' + TypeVal + '"]').attr("id");
+        return TypeId;
+    }
+
+    function getItemId() {
+        var ItemVal = $('[name=ExpenseItem]').val();
+        var ItemId = $('[name=ExpenseItem] option[value="' + ItemVal + '"]').attr("id");
+        return ItemId;
+    }
+
+    function getExpenseItem() {
+        var TypeId = getTypeId();
+        let expenseItemInfo = Common.GetTableData("Sony_Config_Expense_Item", { Enabled: 1, ExpenseCode: 3, TypeID: TypeId });
+        expenseItemInfo.forEach(item => {
+            let expenseItemOption = $(`<option value="${item.ItemName}" id="${item.ItemID}">${item.ItemName}</option>`);
+            $("[name=ExpenseItem]").append(expenseItemOption);
+        });
+    }
+
+    function getPayee() {
+        let payeeList = Common.GetTableData("Sony_Config_Expense_PayeeList", { ExpenseCode: 3, TypeID: getTypeId(), ItemID: getItemId() });
+        payeeList.map(function (o) {
+            $("[name=Payee]").append(`<option value="${o.VendorName}">${o.VendorName}</option>`);
+        });
+    }
+
+    function getReciType() {
+
+        let reciType = Common.GetTableData("Sony_Config_FIDocLine_Expense", { ExpenseCode: 3, TypeID: getTypeId(), ItemID: getItemId() })[0].Receipt;
+        var reciTypeList = reciType.split(",");
+
+        let reciTypeCh = Common.GetTableData("Sony_Config_Expense_DocTypeTaxRate", {}, { fields: ["DocTypeID", "DocTypeName"] });
+
+        var result = reciTypeList.map(id => reciTypeCh.find(item => item.DocTypeID === id));
+        result.forEach(item => {
+            let reciTypeOption = $(`<option value="${item.DocTypeName}" id="${item.DocTypeID}">${item.DocTypeName}</option>`);
+            $("[name=ReciType]").append(reciTypeOption);
+        })
+    }
+
+    function reciDateDisplay() {
+        if (getTypeId() == '0') {
+            $('input[name="ReciDate"]').closest('div').closest('.col-md-3.form-group').hide();
+        }
+        else {
+            $('input[name="ReciDate"]').closest('div').closest('.col-md-3.form-group').show();
+        }
+    }
+
+    function reciTypeDisplay() {
+        var ReciVal = $('[name=ReciType]').val();
+        var ReciId = $('[name=ReciType] option[value="' + ReciVal + '"]').attr("id");
+        var ReciDate = $('input[name="ReciDate"]').closest('.col-md-3.form-group');
+        var ReciNo = $('input[name="ReciNo"]').closest('.col-md-3.form-group');
+
+        if (ReciId == '4') {
+            ReciDate.show();
+            ReciNo.show();
+            $('input[name="ReciDate"]').closest('div').prev('label').text('Receipt Date');
+            $('input[name="ReciNo"]').closest('div').prev('label').text('Receipt No');
+            $('[name="noReci"]').closest('.col-md-2.form-group').show();
+        }
+        else if (ReciId == '1' || ReciId == '2') {
+            ReciDate.show();
+            ReciNo.show();
+            $('input[name="ReciDate"]').closest('div').prev('label').text('GUI Date');
+            $('input[name="ReciNo"]').closest('div').prev('label').text('GUI No');
+            $('[name="noReci"]').closest('.col-md-2.form-group').hide();
+        }
+        else if (ReciId == '6') {
+            ReciDate.hide();
+            ReciNo.hide();
+            $('[name="noReci"]').closest('.col-md-2.form-group').hide();
+        }
+    }
+
+    function fromToDisplay() {
+        var typeId = getTypeId();
+        if (typeId == '0' || typeId == '4') {
+            $('input[name="FromDest"]').closest('.col-md-3.form-group').hide();
+            $('input[name="ToDest"]').closest('.col-md-3.form-group').hide();
+            $('input[name="FromDate"]').closest('.col-md-3.form-group').hide();
+            $('input[name="ToDate"]').closest('.col-md-3.form-group').hide();
+        }
+        else if (typeId == '5' || typeId == '8') {
+            $('input[name="FromDest"]').closest('.col-md-3.form-group').show();
+            $('input[name="ToDest"]').closest('.col-md-3.form-group').show();
+            $('input[name="FromDate"]').closest('.col-md-3.form-group').hide();
+            $('input[name="ToDate"]').closest('.col-md-3.form-group').hide();
+        }
+        else {
+            $('input[name="FromDest"]').closest('.col-md-3.form-group').hide();
+            $('input[name="ToDest"]').closest('.col-md-3.form-group').hide();
+            $('input[name="FromDate"]').closest('.col-md-3.form-group').show();
+            $('input[name="ToDate"]').closest('.col-md-3.form-group').show();
+        }
+    }
+
+    function OtherTrans() {
+        if (getTypeId() == '8' && getItemId() == '13') {
+            $('input[name="OtherTransDesc"]').closest('.col-md-6.form-group').show();
+        }
+        else {
+            $('input[name="OtherTransDesc"]').closest('.col-md-6.form-group').hide();
+        }
+    }
+
+    function setAllOption() {
+        //Expense Type
+        let expenseTypeSelector = $("[name=ExpenseType]");
+        let expenseTypeInfo = Common.GetTableData("Sony_Config_Expense_Type", { Enabled: 1, ExpenseCode: 3 });
+        expenseTypeInfo.forEach(type => {
+            let expenseTypeOption = $(`<option value="${type.TypeName}" id="${type.TypeID}">${type.TypeName}</option>`);
+            expenseTypeSelector.append(expenseTypeOption);
+        });
+
+        //Expense Item (Default)
+        getExpenseItem();
+        OtherTrans();
+
+        fromToDisplay();
+        //Payee (Default)
+        getPayee();
+
+        //ReciType
+        getReciType();
+        reciTypeDisplay();
+        //如果VISA，不顯示Receipt Date
+        reciDateDisplay();
+
+        expenseTypeSelector.change(function () {
+            $("[name=ExpenseItem]").empty();
+            getExpenseItem();
+            OtherTrans();//如果Expense Item是Other transportation fee，顯示費用敘述
+
+            reciDateDisplay();
+            //ReciType
+            $("[name=ReciType]").empty();
+            getReciType();
+            reciTypeDisplay();
+            //如果VISA，不顯示Receipt Date
+            reciDateDisplay();
+
+
+            // 如果選VISA就隱藏From/To
+            fromToDisplay();
+
+            //Payee
+            $("[name=Payee]").empty();
+            getPayee();
+            // if (selectedId == "5") {
+            //     $("[name=Payee]").select2({
+            //         multiple: true
+            //     });
+            // }
+            // else{//若有機票費，可以有兩個Payee
+            //     $("[name=Payee]").select2({
+            //         multiple: false
+            //     });
+            // }
+        })
+        $("[name=ExpenseItem]").change(function () {
+            //ReciType
+            $("[name=ReciType]").empty();
+            getReciType();
+            OtherTrans();
+            reciTypeDisplay();
+            reciDateDisplay();
+            //Payee
+            $("[name=Payee]").empty();
+            getPayee();
+        })
+
+        getCurrency();
+        $('[name=Currency]').change(function () {
+            getRate();
+        })
+
+        //單據日期/編號欄位顯示
+        $("[name=ReciType]").change(function () {
+            reciTypeDisplay();
+        })
+
+        $('[name="noReci"]').change(function () {
+            if ($(this).prop('checked')) {
+                console.log("checked");
+            } else {
+                console.log("no");
+            }
+        });
+        $('[name="noReci"]').click(function () {
+            $(this).prop('checked', !$(this).prop('checked')); // 切換勾選狀態
+        });
+
+    }
+
+    function loading(dataObj) {
+        setAllOption();
+        for (let k in dataObj) {
+            $("[name=" + k + "]").val(dataObj[k]);
+        }
+    }
+</script>
