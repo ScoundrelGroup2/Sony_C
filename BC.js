@@ -1,4 +1,4 @@
-<script>
+//<script>
     var $BC = {
         getPrevSerialID: function (accountId) {
             return Common.GetTableData(
@@ -425,6 +425,10 @@
         let bcNoInfo = $BC.getPrevSerialID($("[name=tApplicantID]").val());
         $BC.appendBcSelector(bcNoInfo);
         $BC.bindCostCenterOption(bpm.formInfo.applicantDept);
+        // 依申請人部門帶入CostCenter資料 -
+        $("[name=tApplicantDept]").change(function () {
+            $BC.bindCostCenterOption($(this).val());
+        });
 
         $("[name=BANo]").change(function () {
 
@@ -1045,4 +1049,4 @@
     function disabledButton(detailName, isOpen) {
         $detail[detailName].target.closest(".table-responsive").find("[action=addRow],[action=delRow]").prop("disabled", isOpen);
     }
-</script>
+//</script>
