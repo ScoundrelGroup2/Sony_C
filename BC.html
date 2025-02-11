@@ -1,0 +1,713 @@
+﻿<div id="header" class="panel panel-info" id="BC">
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#tabs" data-toggle="tab">Application Info. 申請資訊</a>
+            </li>
+        </ul>
+        <div class="form-row">
+            <div class="tab-content tab-content-bordered" style="padding:0px">
+                <div class="tab-pane fade in active" id="tabs-Home">
+                    <!--content start-->
+                    <div class="tab-content tab-content-bordred">
+                        <div class="tab-pane fade in active">
+                            <div class="form-row" style="padding: 15px;">
+                                <div class="col-md-12">
+                                    <div class="col-md-3 form-group">
+                                        <label for="ApplicationType">
+                                            Application Type
+                                        </label>
+                                        <div>
+                                            <input id="ApplicationType" name="ApplicationType" type="text" class="NS"
+                                                   necessary>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="BANo">
+                                            Business Trip Pre-approval No.
+                                        </label>
+                                        <select id="BANo" name="BANo" class="form-control" necessary>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="BALink">
+                                        </label>
+                                        <div>
+                                            <a href="" name="BALink" target="_blank"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-12 form-group">
+                                        <label for="Remark">Remark</label>
+                                        <div class="" setborder="true">
+                                            <input id="Remark" type="text" name="Remark" class="form-control"
+                                                   maxlength="150" necessary>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br> <!--Original Details-->
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#tabs" data-toggle="tab">Original Details</a>
+            </li>
+        </ul>
+        <div class="panel" area="origin">
+            <div class="panel-heading panel-heading-folder">
+                <div>
+                    <font style="font-size: 15px;">
+                        <b>Business Trip Schedule</b>
+                    </font>
+                </div>
+            </div>
+            <div class="tab-content tab-content-bordered" style="padding:0px">
+                <div class="tab-pane fade in active" id="tabs-Home">
+                    <!--content start-->
+                    <div class="form-row" style="padding: 15px;">
+                        <div class="col-md-4 form-group">
+                            <div class="form-group">
+                                <label>Trip Term</label>
+                                <div class="input-group date" style="width: 100%">
+                                    <input type="text" name="TripTermStart" class="form-control" maxlength="20"
+                                           size="20" readonly necessary>
+                                    <span class="input-group-addon"
+                                          style="padding-left: 10px;padding-right: 10px;">To</span>
+                                    <input type="text" name="TripTermEnd" class="form-control" maxlength="20" size="20"
+                                           readonly necessary>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <div class="form-group">
+                                <label for="">Trip Period</label>
+                                <div class="input-group date" style="width: 100%">
+                                    <input type="text" name="TripPeriodStart" class="form-control" maxlength="20"
+                                           size="20" readonly necessary>
+                                    <span class="input-group-addon"
+                                          style="padding-left: 10px;padding-right: 10px;">Days</span>
+                                    <input type="text" name="TripPeriodEnd" class="form-control" maxlength="20"
+                                           size="20" readonly necessary>
+                                    <span class="input-group-addon"
+                                          style="padding-left: 10px;padding-right: 10px;">Nights</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <div class="form-group">
+                                <label for="">Location</label>
+                                <select id="" name="Location" class="form-control" readonly necessary disabled>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="">Trip Destination</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="" name="Destination" class="form-control" type="text" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="">Purpose/Reason</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="" name="Purpose" class="form-control" type="text" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group" delay1 style="display: none;">
+                            <label for="Reason">Reason for Delay Application</label>
+                            <div class="input-group" style="width: 100%;">
+                                <input id="Reason" name="Reason" class="form-control" type="text" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="alert alert-warning m-t-1 col-md-12 form-group">
+                                <button type="button" class="close" data-dismiss="alert">x</button>
+                                <h4 class="alert-heading">Note!</h4>
+                                <ul>
+                                    <li>
+                                        Business trip expenses claim deadline is within 10 work days after the return
+                                        date of a trip. 出差旅費申請期限為出差返回日起10個工作日內。
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group table-responsive">
+                            <label>Detail Schedule</label>
+                            <div class="p-b-1" style="display: none;">
+                                <button action="addRow" type="button" class="btn btn-primary">Add</button>
+                                <button action="delRow" type="button" class="btn btn-danger">Delete</button>
+                            </div>
+                            <table id="detailOrigin" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr style="width: 100%">
+                                        <th style="min-width:100px;">From</th>
+                                        <th style="min-width:100px;">To</th>
+                                        <th style="min-width:150px;">Destination</th>
+                                        <th style="min-width:150px;">Place(Company Name)</th>
+                                        <th style="min-width:250px;">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr name="DetailItem" detailid="Detail" detailtype="template" style="display: ;">
+                                        <td style="text-align:center">
+                                            <input type="text" name="FromDt" class="form-control" maxlength="20"
+                                                   size="20" readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input type="text" name="ToDt" class="form-control" maxlength="20" size="20"
+                                                   readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input name="Destination" class="form-control" type="text" readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input name="Place" class="form-control" type="text" readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input name="Description" class="form-control" type="text" readonly>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--content end-->
+            </div>
+            <div class="panel-heading panel-heading-folder">
+                <div>
+                    <font style="font-size: 15px;">
+                        <b>Expense Details 費用明細</b>
+                    </font>
+                </div>
+            </div>
+            <div class="tab-content tab-content-bordered">
+                <div class="tab-pane fade in active" id="tabs-Home">
+                    <!--content start-->
+                    <div class="form-row">
+                        <div class="col-md-6 form-group">
+                            <label for="">Total Amount</label>
+                            <div class="" setborder="true">
+                                <input id="" type="text" name="TotalAmount" class="form-control" readonly necessary>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="">Cost Center</label>
+                            <select name="CostCenter" class="form-control" readonly necessary disabled>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <!--Input-->
+                        <div class="col-md-12 form-group table-responsive">
+                            <label>
+                                <font style="color:red">*</font>Daily Allowance
+                            </label>
+                            <div class="p-b-1" style="display: none;">
+                                <button action="addRow" type="button" class="btn btn-primary">Add</button>
+                                <button action="delRow" type="button" class="btn btn-danger">Delete</button>
+                            </div>
+                            <table id="detailOrigin2" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="" style="min-width:100px;">From Date</th>
+                                        <th class="" style="min-width:100px;">End Date</th>
+                                        <th class="" style="min-width:100px;">Country</th>
+                                        <th class="" currency style="min-width:100px;">Currency</th>
+                                        <th class="" style="min-width:100px;">Daily Allowance</th>
+                                        <th class="" style="min-width:100px;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr name="DetailItemOrigin2">
+                                        <td style="text-align:center">
+                                            <input type="text" name="FromDate" class="form-control" maxlength="20"
+                                                   size="20" readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input type="text" name="EndDate" class="form-control" maxlength="20"
+                                                   size="20" readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <select name="Country" class="form-control" readonly disabled>
+                                            </select>
+                                        </td>
+                                        <td style="text-align:center" currency>
+                                            <input name="Currency" class="form-control" type="text" readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input name="DailyAllowance" class="form-control" type="text" readonly>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input name="Amount" class="form-control" type="text" readonly>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="text-right">Exchange Rate</td>
+                                        <td colspan="1" style="text-align:left" currency-rate>
+                                            <input name="ExchangeRate" class="form-control hide-detail" type="text"
+                                                   readonly="" maxlength="80" size="20">
+                                        </td>
+                                        </td>
+                                        <td colspan="1" class="text-right">Total Daily Allowance (TWD)</td>
+                                        <!-- <input fo="money" name="" class="form-control hide-detail" type="text"
+                                            colspan="1" style="text-align:left" value readonly> -->
+                                        <td colspan="1" style="text-align:left" type="number">
+                                            <input type="text" name="TotalDailyAllowance"
+                                                   class="form-control hide-detail" maxlength="20" size="20" readonly>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="col-md-12" hidden>
+                            <div class="alert alert-warning m-t-1 col-md-12 form-group">
+                                <button type="button" class="close" data-dismiss="alert">x</button>
+                                <h4 class="alert-heading">Note!</h4>
+                                <ul style="list-style-type: ">
+                                    <li>
+                                        According to HR clarification of new Travel Policy for one biz trip to
+                                        multi-country, per diem payment will be based on
+                                        next destination of departure date for calculation.
+                                        根據HR的解釋，若一趟出差包含多個國家，跨國交通移動日的日當以當日下一個目的地計算。
+                                    </li>
+                                    <li>
+                                        If a staff apply one biz trip from May 11 to 15 to multi-country, then
+                                        per
+                                        diem for May 13:
+                                    </li>
+                                    <li>
+                                        Scenario A) :
+                                        5/11 ~ 13 TPE to China (per diem USD 60)
+                                        5/13 ~ 15 China to JPN (per diem USD 70)
+                                        Then 5/13 per diem is USD70.
+                                    </li>
+
+                                    <li>
+                                        Scenario B) :
+                                        5/11 ~ 13 TPE to JPN (per diem USD 70)
+                                        5/13 ~ 15 JPN to China (per diem USD 60)
+                                        Then 5/13 per diem is USD60.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label for="Accommodation1">Accommodation</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Accommodation" name="Accommodation" class="form-control" type="text" value=""
+                                       readonly necessary>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="Transportation1">Transportation</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Transportation1" name="Transportation" class="form-control" type="text"
+                                       readonly necessary>
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label for="Gift1">Gift</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Gift1" name="Gift" class="form-control" type="text" placeholder="" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="GiftReason1">Receiver / Reason</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="GiftReason1" name="GiftReason" class="form-control" type="text"
+                                       placeholder="" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label for="Enterainment1">Entetainment</label>
+                            <div id="Enterainment1" class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Enterainment" name="Enterainment" class="form-control" type="text"
+                                       placeholder="" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="EnterainmentReason1">Receiver / Reason</label>
+
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="EnterainmentReason1" name="EnterainmentReason" class="form-control"
+                                       type="text" placeholder="" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label for="BizMeal1">Business Meal</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="BizMeal1" name="BizMeal" class="form-control" type="text" placeholder=""
+                                       readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-10 form-group">
+                            <label for="BizMealReason1">Receiver / Reason</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="BizMealReason1" name="BizMealReason" class="form-control" type="text"
+                                       placeholder="" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--content end-->
+            </div>
+        </div>
+        <br> <!--Revise Area-->
+        <ul class="nav nav-tabs" area="revise">
+            <li class="active">
+                <a href="#tabs" data-toggle="tab">Revise Area 修改資訊</a>
+            </li>
+        </ul>
+        <div class="panel" area="revise">
+            <div class="panel-heading panel-heading-folder">
+                <div>
+                    <font style="font-size: 15px;">
+                        <b>Business Trip Schedule</b>
+                    </font>
+                </div>
+            </div>
+            <div class="tab-content tab-content-bordered" style="padding:0px">
+                <div class="tab-pane fade in active" id="tabs-Home">
+                    <!--content start-->
+                    <div class="form-row" style="padding: 15px;">
+                        <div class="col-md-4 form-group">
+                            <div class="form-group">
+                                <label>Trip Term</label>
+                                <div class="input-group date" style="width: 100%" id="tripTerm">
+                                    <input type="text" name="TripTermStart" class="form-control input-only-click"
+                                           maxlength="20" size="20" necessary>
+                                    <span class="input-group-addon"
+                                          style="padding-left: 10px;padding-right: 10px;">To</span>
+                                    <input type="text" name="TripTermEnd" class="form-control input-only-click"
+                                           maxlength="20" size="20" necessary>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <div class="form-group">
+                                <label>Trip Period</label>
+                                <div class="input-group date" style="width: 100%">
+                                    <input type="text" name="TripPeriodStart" class="form-control" maxlength="20"
+                                           size="20" readonly necessary>
+                                    <span class="input-group-addon"
+                                          style="padding-left: 10px;padding-right: 10px;">Days</span>
+                                    <input type="text" name="TripPeriodEnd" class="form-control" maxlength="20"
+                                           size="20" readonly necessary>
+                                    <span class="input-group-addon"
+                                          style="padding-left: 10px;padding-right: 10px;">Nights</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Location</label>
+                            <div class="form-group">
+                                <select name="Location" class="form-control" necessary disabled>
+                                    <option value="Overseas">Overseas</option>
+                                    <option value="Local">Local</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>Trip Destination</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input name="Destination" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>Purpose/Reason</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input name="Purpose" class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 form-group" delay style="display: none;" area="delayReason">
+                            <!-- <div class="col-md-12 form-group" area="delayReason" hidden> -->
+                            <label for="">Reason for Delay Application</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="" name="Reason" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="alert alert-warning m-t-1 col-md-12 form-group">
+                                <button type="button" class="close" data-dismiss="alert">x</button>
+                                <h4 class="alert-heading">Note!</h4>
+                                <ul>
+                                    <li>
+                                        Business trip expenses claim deadline is within 10 work days after the
+                                        return date of a trip. 出差旅費申請期限為出差返回日起10個工作日內。
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group table-responsive">
+                            <label>Detail Schedule</label>
+                            <div class="p-b-1">
+                                <button action="addRow" type="button" class="btn btn-primary">Add</button>
+                                <button action="delRow" type="button" class="btn btn-danger">Delete</button>
+                            </div>
+                            <table id="D1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr style="width: 100%">
+                                        <th style="min-width:10px;">
+                                            <input action="checkAll" id="itemBoxAll" type="checkbox" class="">
+                                        </th>
+                                        <th style="min-width:110px;">From</th>
+                                        <th style="min-width:110px;">To</th>
+                                        <th style="min-width:150px;">Destination</th>
+                                        <th style="min-width:150px;">Place(Company Name)</th>
+                                        <th style="min-width:250px;">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr name="DetailItem1">
+                                        <td style="text-align:center">
+                                            <input action="checkRow" type="checkbox">
+                                        </td>
+                                        <td>
+                                            <input name="FromDt" type="text" class="form-control" autocomplete="off"
+                                                   maxlength="20" necessary>
+                                        </td>
+                                        <td>
+                                            <input name="ToDt" type="text" class="form-control" autocomplete="off"
+                                                   maxlength="20" necessary>
+                                        </td>
+                                        <td>
+                                            <input name="Destination" type="text" class="form-control"
+                                                   autocomplete="off" maxlength="20" necessary>
+                                        </td>
+                                        <td>
+                                            <input name="Place" type="text" class="form-control" autocomplete="off"
+                                                   maxlength="20" necessary>
+                                        </td>
+                                        <td>
+                                            <input name="Description" type="text" class="form-control"
+                                                   autocomplete="off" maxlength="50" necessary>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--content end-->
+            </div>
+            <div class="panel-heading panel-heading-folder">
+                <div>
+                    <font style="font-size: 15px;">
+                        <b>Expense Details 費用明細</b>
+                    </font>
+                </div>
+            </div>
+            <div class="tab-content tab-content-bordered">
+                <div class="tab-pane fade in active" id="tabs-Home">
+                    <!--content start-->
+                    <div class="form-row">
+                        <div class="col-md-6 form-group">
+                            <label for="TotalAmount">Total Amount</label>
+                            <div class="" setborder="true">
+                                <input id="TotalAmount" type="text" name="TotalAmount" class="form-control" value=""
+                                       readonly necessary>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="CostCenter">Cost Center</label>
+                            <select id="CostCenter" name="CostCenter" class="form-control" necessary>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <!--Input-->
+                        <div class="col-md-12 form-group table-responsive">
+                            <label>
+                                <font style="color:red">*</font>Daily Allowance
+                            </label>
+                            <div class="p-b-1">
+                                <button action="addRow" type="button" class="btn btn-primary">Add</button>
+                                <button action="delRow" type="button" class="btn btn-danger">Delete</button>
+                            </div>
+                            <table id="detail2" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width:20px;">
+                                            <input action="checkAll" id="itemBoxAll" type="checkbox" class="">
+                                        </th>
+                                        <th class="" style="min-width:100px;">From Date</th>
+                                        <th class="" style="min-width:100px;">End Date</th>
+                                        <th class="" style="min-width:100px;">Country</th>
+                                        <th class="" currency style="min-width:100px;">Currency</th>
+                                        <th class="" style="min-width:100px;">Daily Allowance</th>
+                                        <th class="" style="min-width:100px;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr name="DetailItem2">
+                                        <td>
+                                            <input action="checkRow" type="checkbox" class="">
+                                        </td>
+                                        <td>
+                                            <input name="FromDate" type="text" class="form-control" autocomplete="off"
+                                                   maxlength="20">
+                                        </td>
+                                        <td>
+                                            <input name="EndDate" type="text" class="form-control" autocomplete="off"
+                                                   maxlength="20">
+                                        </td>
+                                        <td>
+                                            <select name="Country" type="text" class="form-control" autocomplete="off"
+                                                    maxlength="20">
+                                        </td>
+                                        <td class="text-align:right" currency style="vertical-align: middle;">
+                                            <input name="Currency" type="text" class="form-control" disabled>
+                                        </td>
+                                        <td class="text-align:right" style="vertical-align: middle;">
+                                            <input name="DailyAllowance" type="text" class="form-control"
+                                                   autocomplete="off" maxlength="20" readonly>
+                                        </td>
+                                        <td class="text-align:right" style="vertical-align: middle;">
+                                            <input name="Amount" type="text" class="form-control hide-detail"
+                                                   maxlength="20" size="20" readonly=""
+                                                   style="background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0) !important; text-align: right;">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-right" currency-rate>Exchange Rate</td>
+                                        <td colspan="1" style="text-align:left" currency-rate>
+                                            <input name="ExchangeRate" class="form-control hide-detail" type="text"
+                                                   readonly="" maxlength="80" size="20">
+                                        </td>
+                                        <td colspan="1" class="text-right">Total Daily Allowance (TWD)</td>
+                                        <td colspan="1" style="text-align:left" type="number">
+                                            <input type="text" name="TotalDailyAllowance"
+                                                   class="form-control hide-detail" maxlength="20" size="20" readonly>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-md-12" hidden>
+                            <div class="alert alert-warning m-t-1 col-md-12 form-group">
+                                <button type="button" class="close" data-dismiss="alert">x</button>
+                                <h4 class="alert-heading">Note!</h4>
+                                <ul>
+                                    <li>
+                                        According to HR clarification of new Travel Policy for one biz trip to
+                                        multi-country, per diem payment will be based on
+                                        next destination of departure date for calculation.
+                                        根據HR的解釋，若一趟出差包含多個國家，跨國交通移動日的日當以當日下一個目的地計算。
+                                    </li>
+                                    <li>
+                                        If a staff apply one biz trip from May 11 to 15 to multi-country, then
+                                        per
+                                        diem for May 13:
+                                    </li>
+                                    <li>
+                                        Scenario A) :
+                                        5/11 ~ 13 TPE to China (per diem USD 60)
+                                        5/13 ~ 15 China to JPN (per diem USD 70)
+                                        Then 5/13 per diem is USD70.
+                                    </li>
+
+                                    <li>
+                                        Scenario B) :
+                                        5/11 ~ 13 TPE to JPN (per diem USD 70)
+                                        5/13 ~ 15 JPN to China (per diem USD 60)
+                                        Then 5/13 per diem is USD60.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="Accommodation">Accommodation</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Accommodation" name="Accommodation" class="form-control" type="text" readonly
+                                       necessary>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="Transportation">Transportation</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Transportation" name="Transportation" class="form-control" type="text"
+                                       necessary>
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label for="Gift">Gift</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Gift" name="Gift" class="form-control" type="text" placeholder="TWD">
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="GiftReason">Receiver / Reason</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="GiftReason" name="GiftReason" class="form-control" type="text"
+                                       placeholder="Receiver / Reason">
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label for="Enterainment">Entetainment</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="Enterainment" name="Enterainment" class="form-control" type="text"
+                                       placeholder="TWD">
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="EnterainmentReason">Receiver / Reason</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="EnterainmentReason" name="EnterainmentReason" class="form-control"
+                                       type="text" placeholder="Receiver / Reason">
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label for="BizMeal">Business Meal</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="BizMeal" name="BizMeal" class="form-control" type="text" placeholder="TWD">
+                            </div>
+                        </div>
+                        <div class="col-md-10 form-group">
+                            <label for="BizMealReason">Receiver / Reason</label>
+                            <div class="input-group" style="width: 100%;" setborder="true">
+                                <input id="BizMealReason" name="BizMealReason" class="form-control" type="text"
+                                       placeholder="Receiver / Reason">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--/Input-->
+                </div>
+                <!--content end-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<input name="PrevIdentify" type="hidden" data-autoform-item="Hidden">
+<input name="formNo" type="hidden" data-autoform-item="Hidden">
+<input name="Remarks" type="hidden" data-autoform-item="Hidden">
+<input name="_FLOWSE7EN_PROJECT_" type="hidden" data-autoform-item="Hidden">
+<input name="OriginalRequisitionID" type="hidden" data-autoform-item="Hidden">
+<input name="Identify" type="hidden" value='(-:Request("Identify"):-)' data-autoform-item="Hidden">
+<input name="RequisitionID" type="hidden" data-autoform-item="Hidden">
+<input name="DiagramID" type="hidden" data-autoform-item="Hidden">
+<input name="DiagramName" type="hidden" value='(-:Request("DisplayName"):-)' data-autoform-item="Hidden">
+<input name="PMIS_tmpID" type="hidden" value='(-:Request("PMIS_tmpID"):-)' data-autoform-item="Hidden">
+<input name="ApplicantDeptName" type="hidden" data-autoform-item="Hidden">
+<input name="ApplicantName" type="hidden" data-autoform-item="Hidden">
+<input name="FillerID" type="hidden" value='(-:Cookie("AccountID"):-)' data-autoform-item="Hidden">
+<input name="ApplicantDateTime" type="hidden" data-autoform-item="Hidden">
+<input name="DraftFlag" type="hidden" value="0" data-autoform-item="Hidden">
