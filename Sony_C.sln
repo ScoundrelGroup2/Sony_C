@@ -4,12 +4,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "方案項目", "方案項目", "{A93B8256-00DA-4716-849B-1049FED89153}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EX", "EX", "{73163E0A-D2F1-4713-8CCD-D90B046E0684}"
 	ProjectSection(SolutionItems) = preProject
+		EX.html = EX.html
+		EX.js = EX.js
+		EX_detail.html = EX_detail.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BC", "BC", "{4A2333E6-8E5E-4CD9-AF26-634CF54D4708}"
+	ProjectSection(SolutionItems) = preProject
+		BC.html = BC.html
 		BC.js = BC.js
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{73163E0A-D2F1-4713-8CCD-D90B046E0684} = {A93B8256-00DA-4716-849B-1049FED89153}
+		{4A2333E6-8E5E-4CD9-AF26-634CF54D4708} = {A93B8256-00DA-4716-849B-1049FED89153}
 	EndGlobalSection
 EndGlobal
