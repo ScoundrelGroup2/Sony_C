@@ -1,0 +1,436 @@
+﻿<script>
+    // ------------[D表]------------
+    var $BABC = {
+        isEmptyDateRange: function (firstName, secondName) {
+            var firstField = !firstName ? "" : firstName.val();
+            var secondField = !secondName ? "" : secondName.val();
+            return !firstField || !secondField;
+        },
+        // 限制可選的起迄日 -
+        setDetailDateRange: function (tr, start, end) {
+            var tripTermStart = $("[area=revise] [name=TripTermStart]").val();
+            var tripTermEnd = $("[area=revise] [name=TripTermEnd]").val();
+            tr.find("[name=" + start + "]").datepicker("setStartDate", tripTermStart);
+            tr.find("[name=" + start + "]").datepicker("setEndDate", tripTermEnd);
+            tr.find("[name=" + end + "]").datepicker("setStartDate", tripTermStart);
+            tr.find("[name=" + end + "]").datepicker("setEndDate", tripTermEnd);
+        },
+        // 重設Detail可選的起訖日 -
+        resetDetailDateRange: function (id, type = "allowance") {
+            var tripTermStart = $("[area=revise] [name=TripTermStart]").val();
+            var tripTermEnd = $("[area=revise] [name=TripTermEnd]").val();
+            if (type == "schedule") {
+                $detail[id].target.find("tbody tr").each(function (i, tr) {
+                    $BABC.setDetailDateRange($(tr), "FromDt", "ToDt");
+                    var start = $(tr).find("[name=FromDt]").val();
+                    var end = $(tr).find("[name=ToDt]").val();
+                    if (start < tripTermStart) {
+                        $(tr).find("[name=FromDt]").val(null);
+                    }
+                    if (end < tripTermStart) {
+                        $(tr).find("[name=ToDt]").val(null);
+                    }
+                    if (start > tripTermEnd) {
+                        $(tr).find("[name=FromDt]").val(null);
+                    }
+                    if (end > tripTermEnd) {
+                        $(tr).find("[name=ToDt]").val(null);
+                    }
+                });
+            } else if (type == "allowance") {
+                $detail[id].target.find("tbody tr").each(function (i, tr) {
+                    $BABC.setDetailDateRange($(tr), "FromDate", "EndDate");
+                    var start = $(tr).find("[name=FromDate]").val();
+                    var end = $(tr).find("[name=EndDate]").val();
+                    if (start < tripTermStart) {
+                        $(tr).find("[name=FromDate]").val(null);
+                    }
+                    if (end < tripTermStart) {
+                        $(tr).find("[name=EndDate]").val(null);
+                    }
+                    if (start > tripTermEnd) {
+                        $(tr).find("[name=FromDate]").val(null);
+                    }
+                    if (end > tripTermEnd) {
+                        $(tr).find("[name=EndDate]").val(null);
+                    }
+                });
+            }
+        },
+        // 取得職級 -
+        getTitleID: function (accountId, deptId) {
+            return Common.GetTableData("FSe7en_Org_MemberStruct", {
+                $X: "request",
+                "AccountID": accountId || $("[name=tApplicantID]").val(),
+                "DeptID": deptId || $("[name=tApplicantDept]").val()
+            }, {
+                fields: ["TitleID"]
+            })[0].TitleID;
+        },
+        // 取得匯率 -
+        getS068: function () {
+            var obj = {};
+            var USD = Number(Common.GetTableData("Sony_S068", { KURST: "M", "FCURR": "USD" }, { fields: ["UKURS"] })[0].UKURS);
+            obj["USD"] = USD;
+            obj["TWD"] = "1.00000";
+            return obj;
+        },
+        // 計算D2金額、總計 -
+        countD2Total: function (id) {
+            var total = 0;
+            var location = "";
+            $detail[id].target.find("tbody tr").each(function (i, tr) {
+                var $tr = $(tr);
+                location = $tr.attr("location-type");
+                // 每日津貼(列) -
+                $BABC.countD2DailyAllowance($tr, $detail[id].rows);
+
+                // 總計 -
+                if ($tr.find("[name=Amount]").val() != "") {
+                    var amt = Common.RemoveThousandth($tr.find("[name=Amount]").val());
+                    total += Number(amt);
+                }
+            });
+
+            // 計算多國機票(交通)費 -
+            // if (location == "overseas") {
+            //     var transportation = $BABC.countD2Ticket(id);
+            //     $("[area=revise] [name=Transportation]").val(Common.Thousandth(transportation));
+            // }
+            $BABC.countTransportation(location, id);
+
+            total = Math.round(Number($detail[id].target.find("[name=ExchangeRate]").val()) * total);
+            $detail[id].target.find("[name=TotalDailyAllowance]").val(Common.Thousandth(total));
+            countTotal();
+        },
+        // 計算多國的機票費 -
+        countD2Ticket: function (id) {
+            var total = 0;
+            var ticketObj = {};
+            $detail[id].target.find("[name=Country]").each(function (i, country) {
+                var dataInfo = $(country).find("option[value=" + ($(country).val()) + "]").prop("data");
+                for (let k in dataInfo) {
+                    if (k == dataInfo["Transportation"]) {
+                        // total += dataInfo[k];
+                        ticketObj[dataInfo.Country] = dataInfo[k];
+                    }
+                }
+            });
+            for (let k in ticketObj) {
+                total += ticketObj[k];
+            }
+            return total;
+        },
+        // 切換幣別 -
+        locationRate: function (currency) {
+            if (currency == "TWD") {
+                $("[currency]").find("[name=Currency]").val("TWD");
+                $("[currency]").hide();
+                $("[currency-rate]").last().next().attr("colspan", 5);
+                $("[currency-rate]").hide();
+            } else if (currency == "USD") {
+                $("[currency]").find("[name=Currency]").val("USD").prop("disabled", true);
+                $("[currency]").show();
+                $("[currency-rate]").last().next().attr("colspan", 1);
+                $("[currency-rate]").show();
+            }
+        },
+        // D表[Country]的下拉選項 -
+        setLocationOptions: function (tr) {
+            var location = tr.attr("location-type");
+            var titleId = $BABC.getTitleID();
+            var data = $BABC.getAllowanceByTitle(titleId)[0];
+            if (location == "overseas") {
+                var opList = $BABC.getOverseasAllowance();
+                opList.forEach(function (o) {
+                    var op = $(`<option value=""></option>`).clone();
+                    var combineData = { ...o, ...data };
+                    op.text(o.Country).val(o.CountryId).prop("data", combineData);
+                    tr.find("[name=Country]").append(op)
+                    tr.find("[name=Country]").prop("disabled", false);
+                });
+            } else if (location == "local") {
+                var op = $(`<option value=""></option>`).clone();
+                op.val("Local").text("Local").prop("data", data);
+                tr.find("[name=Country]").append(op).val("Local");
+                tr.find("[name=Country]").prop("disabled", true);
+            }
+        },
+        // 國外出差的下拉選項 -
+        getOverseasAllowance: function () {
+            var list = [];
+            list = Common.GetTableData("Sony_Config_AllowanceAndTransportation", null, { fields: ["Country", "CountryId", "Transportation", "DailyAllowanceUSD"], orderby: { "Sort": "ASC","CountryId":"ASC" } }); // 25.02.13 C@issue 14 add排序 -
+            return list;
+        },
+        // 國內出差的下拉選項、每日津貼及交通等費用 -
+        getAllowanceByTitle: function (titleId = "") {
+            var list = [];
+            list = Common.GetTableData("Sony_Config_Allowance", {
+                "Enabled": 1,
+                "TitleID": titleId
+            }, {
+                fields: [
+                    "DomesticDayAllowance", "DomesticOvernightAllowance", "DomesticAccommodation", "DomesticTransportation", "InternationalAccommodation", "AirJPN", "AirHK", "AirSIN", "AirCN", "AirUSA", "AirOther"
+                ]
+            });
+            return list;
+        },
+        // 計算每日津貼(列) -
+        countD2DailyAllowance: function (tr, rows = 0) {
+            var location = tr.attr("location-type");
+            var countryId = tr.find("[name=Country]").val();
+            var obj = tr.find("[name=Country] option[value=" + countryId + "]").prop("data");
+
+            if (location == "overseas") {
+                // 國外出差 -
+                if (!$BABC.isEmptyDateRange(tr.find("[name=FromDate]"), tr.find("[name=EndDate]"))) {
+                    var night = Common.dateCount(tr.find("[name=EndDate]").val(), tr.find("[name=FromDate]").val());
+                    var trAmount = 0;
+                    tr.find("[name=DailyAllowance]").val(obj.DailyAllowanceUSD);
+                    // 最後一筆 -
+                    if (rows > 0 && (tr.index() == rows - 1)) {
+                        night += 1;
+                    }
+                    trAmount = Number(obj.DailyAllowanceUSD) * (night);
+                    tr.find("[name=Amount]").val(Common.Thousandth(trAmount));
+                }
+            } else if (location == "local") {
+                // 國內出差 -
+                // 以每列過夜與否計算 -
+                if (!$BABC.isEmptyDateRange(tr.find("[name=FromDate]"), tr.find("[name=EndDate]"))) {
+                    var night = Common.dateCount(tr.find("[name=EndDate]").val(), tr.find("[name=FromDate]").val());
+                    var trAmount = 0;
+                    // 最後一筆 -
+                    if (rows > 0 && (tr.index() == rows - 1)) {
+                        night += 1;
+                    }
+                    if (night > 0) {
+                        tr.find("[name=DailyAllowance]").val(obj.DomesticOvernightAllowance);
+                        trAmount = Number(obj.DomesticOvernightAllowance) * (night);
+                    } else {
+                        tr.find("[name=DailyAllowance]").val(obj.DomesticDayAllowance);
+                        trAmount = Number(obj.DomesticDayAllowance) * (night);
+                    }
+                    tr.find("[name=Amount]").val(Common.Thousandth(trAmount));
+                }
+            }
+        },
+        // 計算住宿費用(與D表無關) -
+        countAccommodation: function (location) {
+            var titleId = $BABC.getTitleID();
+            var data = $BABC.getAllowanceByTitle(titleId)[0];
+            if (location == "overseas") {
+                // InternationalAccommodation(國外出差) * 夜 -
+                var totalAccommodation = data.InternationalAccommodation;
+                totalAccommodation = Number($("[area=revise] [name=TripPeriodEnd]").val()) * totalAccommodation;
+                $("[area=revise] [name=Accommodation]").val(Common.Thousandth(totalAccommodation));
+            } else if (location == "local") {
+                // 國內出差(不需要乘) -
+                $("[area=revise] [name=Accommodation]").val(Common.Thousandth(data.DomesticAccommodation));
+            }
+        },
+        // 計算交通費用(與D表有關) -
+        countTransportation: function (location, id) {
+            var titleId = $BABC.getTitleID();
+            var data = $BABC.getAllowanceByTitle(titleId)[0];
+            if (location == "overseas") {
+                // 計算多國機票(交通)費 -
+                var transportation = $BABC.countD2Ticket(id);
+                $("[area=revise] [name=Transportation]").val(Common.Thousandth(transportation));
+            } else if (location == "local") {
+                // 國內 -
+                $("[area=revise] [name=Transportation]").val(Common.Thousandth(data.DomesticTransportation));
+            }
+        },
+        // 國內、外出差匯率 -
+        setLocationRate: function (location, id) {
+            var s068 = $BABC.getS068();
+            if (location == "overseas") {
+                $BABC.locationRate("USD");
+                $detail[id].target.find("[name=ExchangeRate]").val(s068["USD"]);
+            } else if (location == "local") {
+                $BABC.locationRate("TWD");
+                $detail[id].target.find("[name=ExchangeRate]").val(s068["TWD"]);
+            }
+        }
+    }
+    // Detail Schedule 事件綁定 -
+    function scheduleEvent(id) {
+        $detail[id].addAfter((tr, i) => {
+            Common.dateRange(tr.find("[name=FromDt]"), tr.find("[name=ToDt]"));
+            // 限 Trip Term 區間 -
+            $BABC.setDetailDateRange(tr, "FromDt", "ToDt");
+        });
+    }
+    // Daily Allowance 事件綁定 -
+    function allowanceEvent(id) {
+        $detail[id].addAfter((tr, i) => {
+            // D表內是國內或國外出差 -
+            var locationType = $("[area=revise] [name=Location]").val().toLowerCase();
+            tr.attr("location-type", locationType);
+
+            // 國內、外出差匯率 -
+            $BABC.setLocationRate(locationType, id);
+
+            // [Country]的下拉選項 -
+            $BABC.setLocationOptions(tr);
+            // 計算每日津貼(列) -
+            $BABC.countD2DailyAllowance(tr, $detail[id].rows);
+
+            Common.dateRange(tr.find("[name=FromDate]"), tr.find("[name=EndDate]"));
+            // 限 Trip Term 區間 -
+            $BABC.setDetailDateRange(tr, "FromDate", "EndDate");
+
+            var $prevTr = $(tr.prev()[0]);
+            var $nextTr = $(tr.next()[0]);
+
+            // ------ Event ------
+            tr.find("[name=FromDate],[name=EndDate],[name=Country]").change(function () {
+                $BABC.countD2Total(id);
+            });
+
+            tr.find("[name=EndDate]").change(function () {
+                var targetDate = $(this).val();
+                if (i >= $detail[id].rows) {
+                    $(this).datepicker("setStartDate", tr.find("[name=FromDate]").val());
+                    if (($prevTr.find("[name=EndDate]").val() == targetDate) && ($prevTr.find("[name=FromDate]").val() == tr.find("[name=FromDate]").val())) {
+                        $(this).Validation("不能與前一列相同");
+                    } else {
+                        $(this).UnValidation();
+                    }
+                }
+            });
+            // ------ Event ------
+
+            if (i > 1) {
+                // 增加時，起始日為上一列的結束日 -
+                var prevEndDate = $prevTr.find("[name=EndDate]").val();
+                if (prevEndDate) {
+                    tr.find("[name=FromDate]").datepicker("update", prevEndDate).val(prevEndDate);
+                }
+            } else {
+                // 第一筆的起始日為 TripTerm 起始日 -
+                var tripTermStart = $("[area=revise] [name=TripTermStart]").val();
+                tr.find("[name=FromDate]").datepicker("setStartDate", tripTermStart).val(tripTermStart);
+            }
+
+            $BABC.countD2Total(id);
+        });
+
+        $detail[id].delAfter(function () {
+            // 設定第一筆資料為 TripTerm 起始日 -
+            if ($detail[id].rows > 0) {
+                var tr = $detail[id].target.find("tbody tr:first");
+                var tripTermStart = $("[area=revise] [name=TripTermStart]").val();
+                tr.find("[name=FromDate]").datepicker("setStartDate", tripTermStart).datepicker("update", tripTermStart).val(tripTermStart);
+                tr.find("[name=EndDate]").datepicker("setStartDate", tripTermStart);
+            }
+
+            $BABC.countD2Total(id);
+        });
+    }
+    // 計算所有金額 -
+    function countTotal() {
+        var totalDailyAllowance = $("[area=revise] [name=TotalDailyAllowance]").val();
+        var accommodation = $("[area=revise] [name=Accommodation]").val();
+        var transportation = $("[area=revise] [name=Transportation]").val();
+        var gift = $("[area=revise] [name=Gift]").val();
+        var enterainment = $("[area=revise] [name=Enterainment]").val();
+        var bizMeal = $("[area=revise] [name=BizMeal]").val();
+        totalDailyAllowance = Number(Common.RemoveThousandth(totalDailyAllowance));
+        accommodation = Number(Common.RemoveThousandth(accommodation));
+        transportation = Number(Common.RemoveThousandth(transportation));
+        gift = Number(Common.RemoveThousandth(gift));
+        enterainment = Number(Common.RemoveThousandth(enterainment));
+        bizMeal = Number(Common.RemoveThousandth(bizMeal));
+
+        var total = 0;
+        total = totalDailyAllowance + accommodation + transportation + gift + enterainment + bizMeal;
+        $("[area=revise] [name=TotalAmount]").val(Common.Thousandth(total));
+    }
+    // ------------[送單檢核]------------
+    // 檢查日期是否有連續 -
+    function dateContinuityCheck(id) {
+        var errorCount = 0;
+        var errorDateIndex = $detail[id].rows;
+        $detail[id].target.find("tbody tr").each(function (i, tr) {
+            var $tr = $(tr);
+            var $prevTr = $tr.prev();
+
+            if ($prevTr.length) {
+                if ($prevTr.find("[name=EndDate]").val() != "") {
+                    if ($prevTr.find("[name=EndDate]").val() != $tr.find("[name=FromDate]").val()) {
+                        errorDateIndex = i;
+                    }
+                }
+            }
+
+            if (i >= errorDateIndex) {
+                $tr.find("[name=FromDate]").Validation("日期須連續");
+                $tr.find("[name=EndDate]").Validation("日期須連續");
+                errorCount += 1;
+            } else {
+                $tr.find("[name=FromDate]").UnValidation();
+                $tr.find("[name=EndDate]").UnValidation();
+            }
+        });
+
+        errorCount += dateContinuityStartEndCheck(id) ? 0 : 1;
+        return errorCount == 0;
+    }
+    // 檢查日期是否在區間內 -
+    function dateRangeCheck(id) {
+        var errorCount = 0;
+        $detail[id].target.find("tbody tr").each(function (i, tr) {
+            var $tr = $(tr);
+            var $prevTr = $tr.prev();
+
+            if ($prevTr.length) {
+                if ($prevTr.find("[name=ToDt]").val() != "") {
+                    if ($tr.find("[name=FromDt]").val() < $prevTr.find("[name=ToDt]").val()) {
+                        $tr.find("[name=FromDt]").Validation("日期不得小於前一筆結束日");
+                        errorCount += 1;
+                    } else {
+                        $tr.find("[name=FromDt]").UnValidation();
+                    }
+                }
+            }
+        });
+        return errorCount == 0;
+    }
+    // 檢查起迄日 -
+    function dateContinuityStartEndCheck(id) {
+        var errorCount = 0;
+        var first = $detail[id].target.find("tbody tr:first").find("[name=FromDate]").val();
+        var last = $detail[id].target.find("tbody tr:last").find("[name=EndDate]").val();
+        if (first != $("[area=revise] [name=TripTermStart]").val()) {
+            $detail[id].target.find("tbody tr:first").find("[name=FromDate]").Validation("須為 Trip Term 的起始日");
+            errorCount += 1;
+        } else {
+            $detail[id].target.find("tbody tr:first").find("[name=FromDate]").UnValidation();
+        }
+
+        if (last != $("[name=TripTermEnd]").val()) {
+            $detail[id].target.find("tbody tr:last").find("[name=EndDate]").Validation("須為 Trip Term 的結束日");
+            errorCount += 1;
+        } else {
+            $detail[id].target.find("tbody tr:last").find("[name=EndDate]").UnValidation();
+        }
+        return errorCount == 0;
+    }
+    function addNecessaryDot(v) {
+        $("[area=revise] [name=" + v + "]").attr("necessary", "");
+        if ($("[area=revise] [name=" + v + "]").closest(".form-group").find("label red").length < 1) {
+            $("[area=revise] [name=" + v + "]").closest(".form-group").find("label").append(`<red type="show">*</red>`);
+        }
+    }
+    function removeNecessaryDot(v) {
+        $("[area=revise] [name=" + v + "]").removeAttr("necessary");
+        if ($("[area=revise] [name=" + v + "]").closest(".form-group").find("label red").length > 0) {
+            $("[area=revise] [name=" + v + "]").closest(".form-group").find("label red").remove();
+        }
+    }
+    function disabledButton(detailName, isOpen) {
+        $detail[detailName].target.closest(".table-responsive").find("[action=addRow],[action=delRow]").prop("disabled", isOpen);
+    }
+</script>
