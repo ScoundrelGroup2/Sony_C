@@ -1,0 +1,572 @@
+(-: NewTypeCom: Sony_BABC_Common_JSDeco: -)
+<script>
+    var $BC = {
+        getPrevSerialID: function (accountId) {
+         return Common.GetTableData(
+    "Sony_View_BC_BANo",
+    {"ApplicantID": accountId },
+    {fields: ["SerialID", "RequisitionID", "Identify"] }
+    );
+      },
+    appendBcSelector: function (data) {
+        data.forEach(item => {
+            let bcNoOption = $(`<option value="${item.RequisitionID}">${item.SerialID}</option>`).clone();
+            bcNoOption.prop("data", item);
+            $("[name=BANo]").append(bcNoOption);
+        });
+      },
+    queryStringInfo: function () {
+         var obj = { }
+    obj["RequisitionID"] = $('[name=BANo]').val();
+    obj["Identify"] = $('[name=PrevIdentify]').val();
+    obj["DiagramName"] = Common.GetTableData("FSe7en_Sys_DiagramList", {
+        "$X": "request",
+    "Project": "BPMPLUS_Sony",
+    "Identify": $('[name=PrevIdentify]').val()
+         }, {
+        top: 1,
+    fields: ["DisplayName"],
+    orderby: {
+        "SourceTime": "DESC"
+            }
+         })[0].DisplayName;
+    return obj;
+      },
+    buildLocationSearch: function (obj) {
+         // 將物件轉換為查詢字串 -
+         var queryList = Object.keys(obj).map(function (key) {
+            var value = key === "DiagramName" ? encodeURIComponent(obj[key]) : obj[key];
+    return key + "=" + value;
+         });
+
+    var queryString = queryList.join("&");
+    var encodedQuery = base64encode(queryString);
+
+    return "?EinB64=" + encodedQuery;
+      },
+    base64encode: function (str) {
+         return btoa(unescape(encodeURIComponent(str))); // 確保編碼正確處理非 ASCII 字符 -
+      },
+    showLink: function () {
+        $("[name=BALink]").text($("[name=BANo] option:selected").text());
+    var url = Common.GetTableData("NUP_Sys_System", {
+        "System": "WebBPM"
+         }, {
+        fields: ["Base_IP"]
+         })[0].Base_IP;
+    href = url + 'FM7_FormContent.aspx';
+    queryStringInfo = $BC.queryStringInfo();
+    queryString = $BC.buildLocationSearch(queryStringInfo);;
+
+    $("[name=BALink]").attr("href", href + queryString);
+      },
+    isExpired: function (targetDate) {
+         // 當天 > targetDate -
+         return new Date().toISOString().split("T")[0] > targetDate;
+      },
+    getS068: function () {
+         var obj = { };
+    var USD = Number(Common.GetTableData("Sony_S068", {KURST: "M", "FCURR": "USD" }, {fields: ["UKURS"] })[0].UKURS);
+    obj["USD"] = USD;
+    obj["TWD"] = "1.00000";
+    return obj;
+      },
+    locationRate: function (currency) { // 切換幣別 -
+         if (currency == "TWD") {
+        $("[currency]").find("[name=Currency]").val("TWD");
+    $("[currency]").hide();
+    $("[currency-rate]").last().next().attr("colspan", 5);
+    $("[currency-rate]").hide();
+         } else if (currency == "USD") {
+        $("[currency]").find("[name=Currency]").val("USD").prop("disabled", true);
+    $("[currency]").show();
+    $("[currency-rate]").last().next().attr("colspan", 1);
+    $("[currency-rate]").show();
+         }
+      },
+    setMainField: function (type, identify, requisitionID) {
+         var list = Common.GetBPMMain(identify, requisitionID);
+    list["TripTermStart"] = list["TripTermStart"].substring(0, 10);
+    list["TripTermEnd"] = list["TripTermEnd"].substring(0, 10);
+    $("[area=" + type + "]").find("[name]").not("table tbody [name]").each(function (i, el) {
+            var name = $(el).attr("name");
+    for (let k in list) {
+               if (name == k) {
+        $("[area=" + type + "]").find("[name=" + k + "]").val(list[k]);
+
+    var thousandthInputList = ["TotalAmount", "Accommodation", "Transportation", "Gift", "Enterainment", "BizMeal", "TotalDailyAllowance"];
+                  if (thousandthInputList.indexOf(name) > -1) {
+        thousandthInputList.forEach(function (elname) {
+            $("[area=" + type + "] [name='" + elname + "']").val(Common.Thousandth($("[area=" + type + "] [name='" + elname + "']").val()));
+        });
+                  }
+               }
+            }
+         });
+      },
+    getPrevDatas: function (type, identify, requisitionID) {
+         var list = Common.GetBPMMain(identify, requisitionID);
+    list["TripTermStart"] = list["TripTermStart"].substring(0, 10);
+    list["TripTermEnd"] = list["TripTermEnd"].substring(0, 10);
+    var scheduleSource = "", allowanceSource = "";
+    if (identify == "BA") {
+        scheduleSource = "D";
+    allowanceSource = "D2";
+         } else if (identify == "BC") {
+        scheduleSource = "D1";
+    allowanceSource = "D";
+         }
+
+         $BC.showDelay(type, list["ApplicantDateTime"] > list["TripTermStart"]);
+
+    $("[area=" + type + "]").find("[name]").not("table tbody [name]").each(function (i, el) {
+            var name = $(el).attr("name");
+    for (let k in list) {
+               if (name == k) {
+        $("[area=" + type + "]").find("[name=" + k + "]").val(list[k]);
+    if (type == "revise") {
+                     // 匯率帶出當前的 -
+                     var locationType = $("[area=" + type + "] [name=Location]").val().toLowerCase();
+    $BABC.setLocationRate(locationType, "detail2");
+    $BABC.countD2Total("detail2");
+                  }
+    var thousandthInputList = ["TotalAmount", "Accommodation", "Transportation", "Gift", "Enterainment", "BizMeal", "TotalDailyAllowance"];
+                  if (thousandthInputList.indexOf(name) > -1) {
+        thousandthInputList.forEach(function (elname) {
+            $("[area=" + type + "] [name='" + elname + "']").val(Common.Thousandth($("[area=" + type + "] [name='" + elname + "']").val()));
+        });
+                  }
+               }
+            }
+         });
+
+    if (type == "origin") {
+        $BC.setDetailSchedule(type, "detailOrigin", identify, requisitionID, scheduleSource);
+    $BC.setDetailAllowance(type, "detailOrigin2", identify, requisitionID, allowanceSource);
+         } else if (type == "revise") {
+        $BC.setDetailSchedule(type, "D1", identify, requisitionID, scheduleSource);
+    $BC.setDetailAllowance(type, "detail2", identify, requisitionID, allowanceSource);
+         }
+      },
+    showDelay: function (type, isDelay) {
+         if (isDelay) {
+        $("[area=" + type + "] [delay],[area=" + type + "] [delay1]").show();
+    addNecessaryDot("Reason");
+         } else {
+        $("[area=" + type + "] [delay],[area=" + type + "] [delay1]").hide();
+    removeNecessaryDot("Reason");
+         }
+      },
+    // 設定 Detail Schedule 資料 -
+    setDetailSchedule: function (type, id, identify, requisitionID, targetTableID) {
+        $detail[id].clear();
+    $detail[id].setDatas({
+        identify: identify,
+    requisitioniD: requisitionID,
+    targetTableID: targetTableID,
+    addAfter: function (tr, data) {
+               var fromDt = data.FromDt;
+    fromDt = fromDt.split("T")[0];
+    var toDt = data.ToDt;
+    toDt = toDt.split("T")[0];
+    tr.find("[name=FromDt]").datepicker("update", fromDt).val(fromDt);
+    tr.find("[name=ToDt]").datepicker("update", toDt).val(toDt);
+    if (type == "origin") {
+        tr.find("[name=FromDt]").datepicker("destroy");
+    tr.find("[name=ToDt]").datepicker("destroy");
+               }
+            },
+         });
+      },
+    // 設定 Daily Allowance 資料 -
+    setDetailAllowance: function (type, id, identify, requisitionID, targetTableID) {
+        $detail[id].clear();
+    $detail[id].setDatas({
+        identify: identify,
+    requisitioniD: requisitionID,
+    targetTableID: targetTableID,
+    addAfter: function (tr, data) {
+               var locationType = $("[area='" + type + "'] [name=Location]").val().toLowerCase();
+    tr.attr("location-type", locationType);
+    $BABC.setLocationOptions(tr);
+    tr.find("[name=Country]").val(data.Country);
+    var fromDate = data.FromDate;
+    fromDate = fromDate.split("T")[0];
+    var endDate = data.EndDate;
+    endDate = endDate.split("T")[0];
+    var dailyAllowance = data.DailyAllowance;
+    dailyAllowance = Common.Thousandth(dailyAllowance);
+    var amount = data.Amount;
+    amount = Common.Thousandth(amount);
+    tr.find("[name=FromDate]").datepicker("update", fromDate).val(fromDate);
+    tr.find("[name=EndDate]").datepicker("update", endDate).val(endDate);
+    tr.find("[name=DailyAllowance]").val(dailyAllowance);
+    tr.find("[name=Amount]").val(amount);
+    if (type == "origin") {
+        tr.find("[name=FromDate]").datepicker("destroy");
+    tr.find("[name=EndDate]").datepicker("destroy");
+               }
+            },
+         });
+      },
+    getCostCenter: function (dept) {
+         return Common.GetTableData("Sony_CostCenter_Mapping", {
+        DeptID: dept,
+         });
+      },
+    // Cost Center -
+    bindCostCenterOption: function (deptID) {
+        $("[name=CostCenter]").empty();
+    var option = $(`<option value=""></option>`).clone();
+    $("[name=CostCenter]").append(option);
+         $BC.getCostCenter(deptID).forEach((obj) => {
+            var op = option.clone();
+    op.val(obj.CostCenter).text(obj.CostCenter);
+    $("[name=CostCenter]").append(op);
+         });
+      }
+   };
+
+   $form.loaded(() => {
+
+
+    });
+
+    $().ready(function () {
+        // [Business Trip Pre-approval No.] 下拉選單 -
+        let bcNoInfo = $BC.getPrevSerialID($("[name=tApplicantID]").val());
+    if (Common.GetRequest("refill") == "1" || bpm.formInfo.processID != "applicant") {
+        let currentFormPreApproval = Common.GetTableData(
+    "FSe7en_Sys_Requisition",
+    {
+        "$X": "request",
+    "RequisitionID": Common.GetBPMMain(bpmParams.identify, Common.GetRequest("RequisitionID")).BANo
+            },
+    {fields: ["SerialID", "RequisitionID"] }
+    )[0];
+    var hasPreApproval = bcNoInfo.filter(function (o) {
+            return o.RequisitionID == currentFormPreApproval.RequisitionID;
+         });
+    if (hasPreApproval.length == 0) {
+        bcNoInfo.push({ ...currentFormPreApproval, "Identify": currentFormPreApproval.SerialID.substring(0, 2) })
+    }
+      }
+    $BC.appendBcSelector(bcNoInfo);
+    // [Cost Center] 下拉選單 -
+    $BC.bindCostCenterOption(bpm.formInfo.applicantDept);
+
+    // ----- Event ------
+    // 依申請人部門帶入CostCenter資料 -
+    $("[name=tApplicantDept]").change(function () {
+        $BC.bindCostCenterOption($(this).val());
+      });
+    // [Business Trip Pre-approval No.]
+    $("[name=BANo]").change(function () {
+         if ($("[name=BANo]").val() != "") {
+            var v = $("[name=BANo]").val();
+    var bcNoIdentify = $("[name=BANo]").find("option[value='" + v + "']").prop("data")["Identify"];
+    $("[name=PrevIdentify]").val(bcNoIdentify);
+    $BC.showLink();
+    $BC.getPrevDatas("origin", bcNoIdentify, v);
+    $BC.getPrevDatas("revise", bcNoIdentify, v);
+         } else {
+        $("[name=BALink]").hide();
+    $("[area=origin]").find("[name]").val("");
+    $("[area=revise]").find("[name]").val("");
+    ["detailOrigin", "detailOrigin2", "D1", "detail2"].forEach(function (detailName) {
+        $detail[detailName].clear();
+            });
+         }
+      });
+
+      // // 國內或國外 -
+      // var location = $("[area=revise] [name=Location]").val().toLowerCase();
+      // $BABC.setLocationRate(location, "detail2");
+      // $detail.detail2.target.find("tbody tr").each(function (i, tr) {
+        //    var $tr = $(tr);
+        //    $tr.attr("location-type", location);
+        //    $tr.find("[name=Country]").empty();
+        //    $BABC.setLocationOptions($tr);
+        // });
+
+        // $BABC.countAccommodation(location);
+        // $BABC.countTransportation(location, "detail2");
+
+        // $BABC.countD2Total("detail2");
+        // // 國內或國外 -/ 
+
+        // // 初始帶入千分位 -
+        // $("[name=Accommodation]").val(Common.Thousandth($("[name=Accommodation]").val()));
+        // $("[name=Transportation]").val(Common.Thousandth($("[name=Transportation]").val()));
+        // $("[name=Gift]").val(Common.Thousandth($("[name=Gift]").val()));
+        // $("[name=Enterainment]").val(Common.Thousandth($("[name=Enterainment]").val()));
+        // $("[name=BizMeal]").val(Common.Thousandth($("[name=BizMeal]").val()));
+
+        // 選cancel時隱藏[area=revise] -
+        $("[name=ApplicationType]").change(function () {
+            var checked = $(this).val();
+            TransType(checked);
+        });
+
+    // 計算Trip Period -
+    Common.dateRange($("[area=revise] [name=TripTermStart]"), $("[area=revise] [name=TripTermEnd]"));
+    $("[area=revise] [name=TripTermStart],[area=revise] [name=TripTermEnd]").change(function () {
+         var startField = $("[area=revise] [name=TripTermStart]");
+    var endField = $("[area=revise] [name=TripTermEnd]");
+
+    if (!$BABC.isEmptyDateRange(startField, endField)) {
+        disabledButton("D1", false);
+    disabledButton("detail2", false);
+    var diffDay = Common.dateCount(endField.val(), startField.val());
+    $("[area=revise] [name=TripPeriodStart]").val(diffDay + 1);
+    $("[area=revise] [name=TripPeriodEnd]").val(diffDay);
+
+         }
+    // 申請日 > 出差起始日 -
+    if ($BC.isExpired(startField.val())) {
+        $("[delay]").show();
+    addNecessaryDot("Reason");
+         } else {
+        $("[delay]").hide();
+    removeNecessaryDot("Reason");
+         }
+
+    if (bpm.formInfo.processID == Common.ResendProcess) {
+        $detail.D1.clear();
+    $detail.detail2.clear();
+    $BABC.countD2Total("detail2");
+         }
+
+    // 25.02.08 共用D表邏輯 -
+    $BABC.resetDetailDateRange("D1", "schedule");
+    $BABC.resetDetailDateRange("detail2", "allowance");
+
+    var location = $("[area=revise] [name=Location]").val().toLowerCase();
+    $BABC.countAccommodation(location);
+    countTotal();
+      });
+
+    $("[area=revise] [name=Transportation]").input(function () {
+        $(this).val(Common.Thousandth($(this).val()));
+    countTotal();
+      });
+    $("[area=revise] [name=Gift]").input(function () {
+        $(this).val(Common.Thousandth($(this).val()));
+    countTotal();
+    if ($(this).val() != "") {
+        $("[area=revise] [name=GiftReason]").attr("necessary", "");
+         } else {
+        $("[area=revise] [name=GiftReason]").removeAttr("necessary");
+         }
+      });
+    $("[area=revise] [name=Enterainment]").input(function () {
+        $(this).val(Common.Thousandth($(this).val()));
+    countTotal();
+    if ($(this).val() != "") {
+        $("[area=revise] [name=EnterainmentReason]").attr("necessary", "");
+         } else {
+        $("[area=revise] [name=EnterainmentReason]").removeAttr("necessary");
+         }
+      });
+    $("[area=revise] [name=BizMeal]").input(function () {
+        $(this).val(Common.Thousandth($(this).val()));
+    countTotal();
+    if ($(this).val() != "") {
+        $("[area=revise] [name=BizMealReason]").attr("necessary", "");
+         } else {
+        $("[area=revise] [name=BizMealReason]").removeAttr("necessary");
+         }
+      });
+
+    // 25.02.11 共用D表事件 -
+    scheduleEvent("D1");
+    allowanceEvent("detail2");
+      // ----- Event ------
+
+      // 簽核時帶回資料 -
+      if ($form.processID == "draft" || (bpm.formInfo.processID == "applicant" && $form.refillFlag.indexOf(Common.GetRequest("refill")) > -1) || bpm.formInfo.processID != "applicant") {
+        $form.setDatas();
+    $("[name=TripTermStart]").val($("[name=TripTermStart]").val().split("T")[0]);
+    $("[name=TripTermEnd]").val($("[name=TripTermEnd]").val().split("T")[0]);
+    //明細表填值 -
+    var oldRequisitionID = $("[name=BANo]").val() || Common.GetBPMMain(bpmParams.identify,bpmParams.requisitionID).BANo;
+    var oldIdentify = $("[name=PrevIdentify]").val();
+    var currentRequisitionID = Common.GetRequest("refill") == "1" ? Common.GetRequest("RequisitionID") : bpmParams.requisitionID;
+    var currentIdentify = Common.GetRequest("refill") == "1" ? Common.GetRequest("Identify") : bpmParams.identify;
+    var scheduleSource = "", allowanceSource = "";
+    $BC.setMainField("origin", oldIdentify, $("[name=BANo]").val());
+    $BC.setMainField("revise",currentIdentify,currentRequisitionID);
+    if (oldIdentify == "BA") {
+        scheduleSource = "D";
+    allowanceSource = "D2";
+         } else if (oldIdentify == "BC") {
+        scheduleSource = "D1";
+    allowanceSource = "D";
+         }
+    $BC.setDetailSchedule("origin", "detailOrigin", oldIdentify, oldRequisitionID, scheduleSource);
+    $BC.setDetailAllowance("origin", "detailOrigin2", oldIdentify, oldRequisitionID, allowanceSource);
+    $BC.setDetailSchedule("revise", "D1", currentIdentify, currentRequisitionID, "D1");
+    $BC.setDetailAllowance("revise", "detail2", currentIdentify, currentRequisitionID, "D");
+    if (bpm.formInfo.processID != "applicant") {
+        $detail.detailOrigin.view.unlock();
+    $detail.detailOrigin2.view.unlock();
+    $detail.detail2.view.unlock();
+    $detail.D1.view.approve();
+    $detail.detail2.view.approve();
+         }
+
+    if ($('[name=ApplicationType]:checked').val() == 'Cancel') {
+        $('[area=revise]').hide();
+         }
+      }
+
+
+    bpm.handlerSend(function (info) {
+         var sendFlag = true;
+    var errorCount = 0;
+    if ((info.action == "draft" && bpm.formInfo.processID == "applicant") || info.action == "submit" || bpm.formInfo.processID == Common.ResendProcess) {
+            if (info.action == "submit") {
+               if (bpm.formInfo.processID == "applicant") {
+
+        $('[area="origin"] [name]').removeAttr('name'); //只insert修改資訊 -
+
+    $("#BC").find("[disabled]:not(button)").each(function (i, el) {
+        $(el).prop("disabled", false);
+                  });
+
+    //送出之前檢查，若有填入金額，reason為必填 -
+    if ($("[area=revise] [name=Gift]").val() != "") {
+                     if ($("[area=revise] [name=GiftReason]").val() == "") {
+        $('[area=revise] [name=GiftReason]').Validation('Receiver / Reason 不得為空值');
+    sendFlag = false;
+                     }
+                  }
+    if ($("[area=revise] [name=Enterainment]").val() != "") {
+                     if ($("[area=revise] [name=EnterainmentReason]").val() == "") {
+        $('[area=revise] [name=EnterainmentReason]').Validation('Receiver / Reason 不得為空值');
+    sendFlag = false;
+                     }
+                  }
+    if ($("[area=revise] [name=BizMeal]").val() != "") {
+                     if ($("[area=revise] [name=BizMealReason]").val() == "") {
+        $('[area=revise] [name=BizMealReason]').Validation('Receiver / Reason 不得為空值');
+    sendFlag = false;
+                     }
+                  }
+
+    sendFlag = checkValid();
+    if (checkValid()) {
+        //insert D表資料 -
+        Common.InsertBPMDetail({
+            requisitionID: bpm.formInfo.requisitionID,
+            table: "FM7T_BC_D1",
+            itemList: JSON.stringify($detail.D1.getViewDatas()),
+            done: function (data) {
+                switch (data) {
+                    case "success":
+                        break;
+                    default:
+                        WrongAlert("新增明細表時發生錯誤 ! 未新增任何資料");
+                        sendFlag = false;
+                        break;
+                }
+            }
+        });
+
+    var detail2Data = $detail.detail2.getViewDatas();
+    for (var i = 0; i < detail2Data.length; i++) {
+        detail2Data[i].Amount = detail2Data[i].Amount.RemoveThousandth();
+    detail2Data[i].DailyAllowance = detail2Data[i].DailyAllowance.RemoveThousandth();
+                     }
+
+    Common.InsertBPMDetail({
+        requisitionID: bpm.formInfo.requisitionID,
+    table: "FM7T_BC_D",
+    itemList: JSON.stringify(detail2Data),
+    done: function (data) {
+                           switch (data) {
+                              case "success":
+    break;
+    default:
+    WrongAlert("新增明細表時發生錯誤 ! 未新增任何資料");
+    sendFlag = false;
+    break;
+                           }
+                        }
+                     });
+                  }
+               }
+            } else if (info.action == "draft") {
+        // 
+    } else if (info.action == "agree") {
+
+               if (bpm.formInfo.processID == Common.ResendProcess) {
+        errorCount += !$form.validate() ? 1 : 0;
+    errorCount += !checkValid() ? 1 : 0;
+
+               }
+            }
+         }
+
+         if (errorCount > 0) {
+        sendFlag = false;
+         }
+    if (sendFlag) {
+        ["TotalAmount", "TotalDailyAllowance", "Accommodation", "Transportation", "Gift", "Enterainment", "BizMeal"].forEach(name => {
+            $("[area=revise] [name=" + name + "]").val(Common.RemoveThousandth($("[area=revise] [name=" + name + "]").val()));
+        });
+         }
+    return sendFlag;
+      });
+
+   });
+    //-----------------------------------------------------------------------------------//
+    // 修改或取消 -
+    function TransType(checked) {
+      if (checked == "Cancel") // In-house-
+    {
+        $("[area=revise]").hide();// 選Cancel時，不顯示Revise area
+    if ($("[name=BANo]").val() != "") {
+        $("[name=BALink]").show();
+    $BC.showLink();
+         }
+      } else {
+        $("[area=revise]").show();
+    $("[name=BALink]").show();
+      }
+   }
+    // 延遲填原因 -
+    function delayReason() {
+      if ($("[name=Location]").val() == "Local") {
+        $("[area=delayReason]").show();
+      }
+    else {
+        $("[area=delayReason]").hide();
+      }
+   }
+    function checkValid() {
+      var sendFlag = true;
+    if ($detail.D1.rows == 0) {
+        sendFlag = false;
+    WrongAlert("請填寫Detail Schedule !");
+      }
+
+    if ($detail.detail2.rows == 0) {
+        sendFlag = false;
+    WrongAlert("請填寫Daily Allowance !");
+      }
+
+    if (!dateRangeCheck("D1")) {
+        sendFlag = false;
+    WrongAlert("Detail Schedule 日期須依序填寫 !");
+      }
+
+    if (!dateContinuityCheck("detail2")) {
+        sendFlag = false;
+    WrongAlert("Daily Allowance 日期須連續 !");
+      }
+
+    return sendFlag;
+   }
+
+</script>
